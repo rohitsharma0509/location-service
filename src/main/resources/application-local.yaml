@@ -1,0 +1,61 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    database: rider_location
+
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+
+
+secretsPath: "rider/local-secrets"
+
+
+server:
+  port: 8085
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    com.memorynotfound: DEBUG
+
+
+kafka:
+  topic: rider-location
+  consumerGroupId: rider-location-service-group
+  noOfConcurrentMessage: 3
+  noOfPartitions: 1
+  
+api:
+  googleMaps :
+    url: ${GOOGLE_MAPS_API_URL:https://maps.googleapis.com/maps/api/distancematrix/json}
+#
+
+configurable:
+  minimum: 
+    jobs-for-rider: 1
+    riders-for-job: 1
+  maximum: 
+    jobs-for-rider: 10
+    riders-for-job: 100
+
+riderService:
+  path: http://localhost:8080
+  
+cognito:
+  app:
+    url: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_HLDWLUDkm
+  ops:
+    url: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_dLsH3DOsm
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health

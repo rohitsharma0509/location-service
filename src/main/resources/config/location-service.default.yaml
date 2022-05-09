@@ -1,0 +1,10 @@
+CONFIGURABLE_MINIMUM_JOBS_FOR_RIDER: "1"
+CONFIGURABLE_MINIMUM_RIDERS_FOR_JOB: "1" 
+CONFIGURABLE_MAXIMUM_JOBS_FOR_RIDER: "10"
+CONFIGURABLE_MAXIMUM_RIDERS_FOR_JOB: "100"
+RIDER_SERVICE: "http://rider-service.dev:8080"
+COGNITO_URL_APP: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_HLDWLUDkm
+COGNITO_URL_OPS: https://cognito-idp.ap-southeast-1.amazonaws.com/ap-southeast-1_dLsH3DOsm
+COMPANY: "SCB"
+PROJECT_NAME: "rider"
+DIST_TRACER_ENDPOINT: "http://jaeger-operator-jaeger-collector.default:14268/api/traces"

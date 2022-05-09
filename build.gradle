@@ -1,0 +1,143 @@
+plugins {
+	id 'org.springframework.boot' version '2.4.0'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+	id 'war'
+	id "org.flywaydb.flyway" version "7.3.0"
+	id 'jacoco'
+	id "org.sonarqube" version "3.0"
+	id 'net.linguica.maven-settings' version '0.5'
+}
+
+
+group = 'com.scb.location'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+	maven {
+		name 'rider-maven-release'
+		url 'https://nexus.devops.easy2easiest.com/repository/rider-maven-release-local'
+		credentials {
+			username System.getenv("NEXUS_USER")
+			password System.getenv("NEXUS_PASSWORD")
+		}
+	}
+}
+
+bootRun {
+	// support passing -Dsystem.property=value to bootRun task
+	systemProperties = System.properties
+}
+
+
+dependencies {
+	compile group: 'com.google.code.gson', name: 'gson'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.4.0'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.kafka:spring-kafka'
+	implementation 'com.squareup.okhttp3:okhttp:3.0.1'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator:2.3.5.RELEASE'
+	implementation 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+	implementation 'net.logstash.logback:logstash-logback-encoder:5.2'
+	compile group: 'com.auth0', name: 'java-jwt', version: '3.12.1'
+	implementation 'com.auth0:jwks-rsa:0.15.0'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.11'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	implementation 'org.postgresql:postgresql'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	implementation 'net.postgis:postgis-jdbc:2.5.0'
+	implementation 'org.hibernate:hibernate-spatial:5.4.24.Final'
+	implementation 'org.n52.jackson:jackson-datatype-jts:1.2.7'
+	implementation 'com.zaxxer:HikariCP:3.4.5'
+	compileOnly 'org.projectlombok:lombok:1.18.16'
+	annotationProcessor 'org.projectlombok:lombok:1.18.16'
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+	testCompileOnly 'org.projectlombok:lombok:1.18.16'
+	testImplementation 'org.awaitility:awaitility:4.0.3'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.16'
+	implementation  'org.flywaydb:flyway-core'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-bean-validators:3.0.0'
+	implementation 'org.json:json:20201115'
+	testImplementation('junit:junit:4.13')
+	testCompile("org.mock-server:mockserver-netty:5.5.1")
+	implementation group: 'com.google.maps', name: 'google-maps-services', version: '0.18.0'
+
+	// added to export custom metrics
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.3.5.RELEASE'
+	implementation group: 'io.micrometer', name: 'micrometer-core', version: '1.6.3'
+	implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.6.3'
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.4.3'
+
+	// added for retry support
+	implementation 'org.springframework.retry:spring-retry:1.2.5.RELEASE'
+	implementation 'org.springframework:spring-aspects:5.2.8.RELEASE'
+	implementation 'com.scb.rider:distributed-tracing-lib:0.0.20'
+
+}
+
+test {
+	useJUnitPlatform()
+	jacoco {
+		finalizedBy jacocoTestReport
+		destinationFile = file("build/jacoco/sonar.exec")
+	}
+	jacocoTestReport {
+		dependsOn test
+	}
+	testLogging {
+		events 'PASSED', 'FAILED', 'SKIPPED'
+	}
+
+}
+
+jacocoTestReport {
+	executionData fileTree(buildDir).include("/jacoco/*.exec")
+	reports {
+		xml.enabled true
+		csv.enabled true
+		html.destination file("${buildDir}/jacocoHtml")
+	}
+	afterEvaluate {
+		getClassDirectories().setFrom( files(classDirectories.files.collect {
+			fileTree(dir: it, exclude: coverageExcludes())
+		}))
+	}
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.30
+			}
+		}
+	}
+	afterEvaluate {
+		getClassDirectories().setFrom(classDirectories.files.collect {
+			fileTree(dir: it, exclude: coverageExcludes())
+		})
+	}
+}
+
+check.dependsOn jacocoTestCoverageVerification
+
+
+static def coverageExcludes() {
+	return ["**/com/scb/location/config/**",
+			"com/scb/location/LocationServiceApplication.class",
+			"com/scb/location/kafka/consumer/ListenerConfig.class",
+			"com/scb/location/kafka/producer/SenderConfig.java",
+			"com/scb/location/kafka/consumer/CustomCooperativeStickyAssignor.java",
+			"com/scb/location/service/route/GoogleMapsDirectionsService.java"]
+}
+
+sonarqube {
+	properties {
+		property 'sonar.coverage.exclusions', coverageExcludes()
+	}
+}

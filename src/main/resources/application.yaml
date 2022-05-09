@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: "location-service"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    database: rider_location
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+
+
+secretsPath: ${SECRETS_PATH}
+
+server:
+  port: 8080
+
+logging:
+  enabled:
+    response-body: false
+  level:
+    root: INFO
+    org.springframework.web: INFO
+    org.zalando.logbook: TRACE
+
+kafka:
+  topic: rider-location
+  profile-update-topic: rider-status-update
+  consumerGroupId: rider-location-service-group
+  noOfConcurrentMessage: 1
+  noOfPartitions: ${NO_OF_PARTITIONS}
+  groupInstanceId: ${HOSTNAME} #injected at pod level to have static membership in kafka
+
+api:
+  googleMaps :
+    url: ${GOOGLE_MAPS_API_URL:https://maps.googleapis.com/maps/api/distancematrix/json?avoid=tolls&avoid=highways}
+    reverse:
+      geocode: ${GOOGLE_MAPS_GEOCODE:https://maps.googleapis.com/maps/api/geocode/json}
+      
+configurable:
+  minimum:
+    jobs-for-rider: ${CONFIGURABLE_MINIMUM_JOBS_FOR_RIDER}
+    riders-for-job: ${CONFIGURABLE_MINIMUM_RIDERS_FOR_JOB}
+  maximum:
+    jobs-for-rider: ${CONFIGURABLE_MAXIMUM_JOBS_FOR_RIDER}
+    riders-for-job: ${CONFIGURABLE_MAXIMUM_RIDERS_FOR_JOB}
+
+riderService:
+  path: ${RIDER_SERVICE}
+  
+cognito:
+  app:
+    url: ${COGNITO_URL_APP}
+  ops:
+    url: ${COGNITO_URL_OPS}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health

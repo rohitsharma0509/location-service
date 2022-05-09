@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    database: rider_location
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  flyway:
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+  kafka:
+    properties:
+      bootstrap.servers: ${spring.embedded.kafka.brokers}
+      sasl.mechanism: PLAIN
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      
+secretsPath: rider/local-secrets
+
+api:
+  googleMaps :
+    url: ${GOOGLE_MAPS_API_URL:https://maps.googleapis.com/maps/api/distancematrix/json?avoid=tolls&avoid=highways}
+
+configurable:
+  minimum: 
+    jobs-for-rider: 1
+    riders-for-job: 1
+  maximum: 
+    jobs-for-rider: 10
+    riders-for-job: 100
+
+riderService:
+  path: ${RIDER_SERVICE}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus,health
+
+DIST_TRACER_ENDPOINT: ""
+COMPANY: ""
+PROJECT_NAME: ""

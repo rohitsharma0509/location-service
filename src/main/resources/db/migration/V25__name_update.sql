@@ -1,0 +1,1 @@
+update bangkok_zone set name='ประเวศ' where zone_id=32;

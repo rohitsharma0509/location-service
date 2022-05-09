@@ -1,0 +1,16 @@
+update bangkok_zone set name='กรุงเทพมหานคร: คลองเตย' where zone_id=1;
+update bangkok_zone set name='กรุงเทพมหานคร: จตุจักร' where zone_id=2;
+update bangkok_zone set name='กรุงเทพมหานคร: ดินแดง' where zone_id=3;
+update bangkok_zone set name='กรุงเทพมหานคร: บางกะปิ' where zone_id=4;
+update bangkok_zone set name='กรุงเทพมหานคร: บางคอแหลม' where zone_id=5;
+update bangkok_zone set name='กรุงเทพมหานคร: บางรัก' where zone_id=6;
+update bangkok_zone set name='กรุงเทพมหานคร: ปทุมวัน' where zone_id=7;
+update bangkok_zone set name='กรุงเทพมหานคร: พญาไท' where zone_id=8;
+update bangkok_zone set name='กรุงเทพมหานคร: ยานนาวา' where zone_id=9;
+update bangkok_zone set name='กรุงเทพมหานคร: ราชเทวี' where zone_id=10;
+update bangkok_zone set name='กรุงเทพมหานคร: ลาดพร้าว' where zone_id=11;
+update bangkok_zone set name='กรุงเทพมหานคร: วังทองหลาง' where zone_id=12;
+update bangkok_zone set name='กรุงเทพมหานคร: วัฒนา' where zone_id=13;
+update bangkok_zone set name='กรุงเทพมหานคร: สัมพันธวงศ์' where zone_id=14;
+update bangkok_zone set name='กรุงเทพมหานคร: สาทร' where zone_id=15;
+update bangkok_zone set name='กรุงเทพมหานคร: ห้วยขวาง' where zone_id=16;

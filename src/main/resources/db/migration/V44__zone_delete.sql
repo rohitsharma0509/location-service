@@ -1,0 +1,1 @@
+DELETE FROM bangkok_zone WHERE zone_id = 2003 and name = 'กะรน';

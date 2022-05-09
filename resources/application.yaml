@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    database: rider_location
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    hibernate:
+      ddl-auto: update
+  flyway:
+    locations: classpath:db/migration
+    schemas: public
+    enabled: true
+  kafka:
+    properties:
+      bootstrap.servers: b-2.rider-dev-kafka.euxdm6.c3.kafka.ap-southeast-1.amazonaws.com:9092,b-1.rider-dev-kafka.euxdm6.c3.kafka.ap-southeast-1.amazonaws.com:9092,b-3.rider-dev-kafka.euxdm6.c3.kafka.ap-southeast-1.amazonaws.com:9092
+      sasl.mechanism: PLAIN
+    consumer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  
+
+secretsPath: ${SECRETS_PATH}
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: INFO
+
+kafka:
+  topic: rider-location
+  consumerGroupId: rider-location-service-group
+  noOfConcurrentMessage: 10    

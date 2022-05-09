@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    database: rider_location
+  jpa:
+    database-platform: org.hibernate.spatial.dialect.postgis.PostgisDialect
+    hibernate:
+      ddl-auto: update
+#  flyway:
+#    locations: classpath:db/migration
+#    schemas: public
+#    enabled: true
+#  kafka:
+#    properties:
+#      bootstrap.servers: ${spring.embedded.kafka.brokers}
+#      sasl.mechanism: PLAIN
+#    consumer:
+#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+#      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+  
+
+secretsPath: "rider/local-secrets"
+
+#kafka:
+#  bootstrap-servers: ${spring.embedded.kafka.brokers}
+#  auto-offset-reset: earliest
+#  topic: rider-location
